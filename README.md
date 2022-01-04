@@ -2,5 +2,6 @@
 ### Introduction
 CPA Project, my graduation project.
 ### TO-DO
-[] Preprocess data (Mask & Augmentation)
-[] Train data using VGGNet
+- [ ] Preprocess data (Mask & Augmentation)
+
+- [ ] Train data using VGGNet
