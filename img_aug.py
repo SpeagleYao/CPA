@@ -14,7 +14,8 @@ class data_generator():
         data = np.load(img_dir)
         label = np.load(tar_dir)
 
-        self.p = Augmentor.DataPipeline(np.stack((data_in, data_out), axis=1))
+        # self.p = Augmentor.DataPipeline(np.stack((data_in, data_out), axis=1))
+        self.p = Augmentor.DataPipeline(data)
 
         if train:
             self.p.rotate(probability=1.0, max_left_rotation=25, max_right_rotation=25)

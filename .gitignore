@@ -1,6 +1,8 @@
 # Personal
 data/CPA
 data/image
+data/img*
+data/tar*
 test.py
 
 # Byte-compiled / optimized / DLL files
