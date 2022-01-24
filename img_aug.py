@@ -11,12 +11,14 @@ class data_generator():
     def __init__(self, img_dir, tar_dir, batch_size = 128, train=False, seed=None):
         super(data_generator, self).__init__()
 
-        data = np.load(img_dir)
+        data = np.expand_dims(np.load(img_dir), axis=1)
         label = np.load(tar_dir)
+        # print(data.shape, label.shape)
 
         self.p = Augmentor.DataPipeline(data, label.tolist())
 
         if train:
+            pass
             self.p.rotate(probability=1.0, max_left_rotation=25, max_right_rotation=25)
             self.p.flip_left_right(probability=0.5)
             self.p.flip_top_bottom(probability=0.5)
@@ -36,7 +38,7 @@ class data_generator():
 
     def gen(self):
         img_aug, y = next(self.g)
-        img_aug = torch.as_tensor(img_aug).float().detach().requires_grad_(True)
+        img_aug = torch.as_tensor(np.array(img_aug)).float().detach().requires_grad_(True)/255
         y = torch.as_tensor(np.array(y)).float().detach().requires_grad_(True)
         # print(img_aug.shape, len(y))
         # img_tot = np.array(next(self.g))
@@ -52,7 +54,7 @@ if __name__=='__main__':
     tar_dir = './data/tar_train.npy'
     g = data_generator(img_dir, tar_dir, batch_size=4, train=True)
     img, tar = g.gen()
-    print(img.shape, tar.shape) # 256, 1, 128, 128
+    print(img.shape, tar.shape) # bs, 1, 512, 512
     print(img[0].max(), img[0].min(), img[0].mean(), img[0].std())
     # ind = 0
     # a = np.hstack((img.detach().numpy()[ind][0]*255, tar.detach().numpy()[ind][0]*255))
