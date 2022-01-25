@@ -25,7 +25,8 @@ class data_generator():
             # self.p.skew(probability=0.25)
             # self.p.random_distortion(probability=0.25, grid_height=16, grid_width=16, magnitude=1)
             self.p.crop_random(probability=0.5, percentage_area=0.9)
-            self.p.resize(probability=1, width=512, height=512)
+            # self.p.resize(probability=1, width=512, height=512)
+            self.p.resize(probability=1, width=224, height=224)
         else:
             seed = 1105
 
