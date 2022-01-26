@@ -3,7 +3,7 @@ data/CPA
 data/image
 data/img*
 data/tar*
-test.py
+*.pth
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
