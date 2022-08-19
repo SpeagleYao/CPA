@@ -1,15 +1,8 @@
 # CPA
 ### Introduction
-CPA Project, my graduation project.
+Study on Non-invasive Method for Collagen Proportionate Area Ratio Detection Based on CT images
+SJTU Graduation Project by Yao Yiran
 
 ### How to use?
 
-1. data_preprocess.py
-2. cpa_get.py
-3. data_concat.py
-
-
-### TO-DO
-- [ ] Preprocess data (Mask & Augmentation)
-
-- [ ] Train data using VGGNet
+See tutorial [here](./tutorial.pdf)

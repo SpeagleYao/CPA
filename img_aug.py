@@ -6,13 +6,26 @@ import random
 import torch
 from torchvision.transforms import transforms
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+def normalization(data):
+    data = np.array(data)
+    ds = data.shape
+    data = np.squeeze(data)
+    data = data.reshape(ds[0], -1)
+    # print(ds)
+    dmax = np.expand_dims(np.max(data, axis=1), axis=1).repeat(data.shape[-1], axis=1)
+    dmin = np.expand_dims(np.min(data, axis=1), axis=1).repeat(data.shape[-1], axis=1)
+    data = (data - dmin) / (dmax - dmin)
+    data = data.reshape(ds[0], ds[1], ds[2], ds[3])
+    return data
 
 class data_generator():
     def __init__(self, img_dir, tar_dir, batch_size = 128, train=False, seed=None):
         super(data_generator, self).__init__()
 
+        # data = np.load(img_dir)
+        # label = np.load(tar_dir)
         data = np.expand_dims(np.load(img_dir), axis=1)
         label = np.expand_dims(np.load(tar_dir), axis=1)
         # print(data.shape, label.shape)
@@ -20,19 +33,20 @@ class data_generator():
         self.p = Augmentor.DataPipeline(data, label.tolist())
 
         if train:
-            pass
+            # pass
             self.p.rotate(probability=1.0, max_left_rotation=25, max_right_rotation=25)
             self.p.flip_left_right(probability=0.5)
             self.p.flip_top_bottom(probability=0.5)
             # self.p.skew(probability=0.25)
             # self.p.random_distortion(probability=0.25, grid_height=16, grid_width=16, magnitude=1)
-            self.p.crop_random(probability=0.5, percentage_area=0.9)
+            # self.p.crop_random(probability=0.8, percentage_area=0.98)
             # self.p.resize(probability=1, width=512, height=512)
             # self.p.resize(probability=1, width=224, height=224)
         else:
             seed = 1105
 
         self.p.resize(probability=1, width=224, height=224)
+        # self.p.resize(probability=1, width=64, height=64)
 
         if seed:
             np.random.seed(seed)
@@ -43,7 +57,8 @@ class data_generator():
 
     def gen(self):
         img_aug, y = next(self.g)
-        img_aug = torch.as_tensor(np.array(img_aug)).float().detach().requires_grad_(True)/255
+        img_aug = normalization(img_aug)
+        img_aug = torch.as_tensor(np.array(img_aug)).float().detach().requires_grad_(True)
         y = torch.as_tensor(np.array(y)).float().detach().requires_grad_(True)
         # print(img_aug.shape, len(y))
         # img_tot = np.array(next(self.g))
@@ -55,14 +70,18 @@ class data_generator():
         return img_aug, y
 
 if __name__=='__main__':
-    img_dir = './data/img_train.npy'
-    tar_dir = './data/tar_train.npy'
+    img_dir = './data/img_train_3df0_224.npy'
+    tar_dir = './data/tar_train_3df0_224.npy'
     g = data_generator(img_dir, tar_dir, batch_size=128, train=True)
     img, tar = g.gen()
+    img_aug, tar_aug =img[0][0].detach().numpy(), tar[0][0].detach().numpy()
     img = img.cuda()
     tar = tar.cuda()
     print(img.shape, tar.shape) # bs, 1, 512, 512
     print(img[0].max(), img[0].min(), img[0].mean(), img[0].std())
+
+    cv2.imwrite('./img_aug/CPA: ' + str(tar_aug) + '.jpg', img_aug*255)
+    
     # ind = 0
     # a = np.hstack((img.detach().numpy()[ind][0]*255, tar.detach().numpy()[ind][0]*255))
     # cv2.imwrite('testimage.png', a)

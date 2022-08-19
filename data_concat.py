@@ -1,19 +1,19 @@
 import numpy as np
 
-d1_1 = np.load("./data/image/data_1_1.npy")
-d1_2 = np.load("./data/image/data_1_2.npy")
-d2_92 = np.load("./data/image/data_2_92.npy")
-d3_9 = np.load("./data/image/data_3_9.npy")
+d3 = np.load("./data/data_3d3_224.npy")
+d4 = np.load("./data/data_3d4_224.npy")
+df0 = np.load("./data/data_3df0_224.npy")
+df1 = np.load("./data/data_3df1_224.npy")
 
-d = np.concatenate((d1_1, d1_2, d2_92, d3_9))
+d = np.concatenate((d3, d4, df0, df1))
 print(d.shape)
-np.save('./data/data.npy', d)
+np.save('./data/data_3d_224.npy', d)
 
-l1_1 = np.load("./data/CPA/label_1_1.npy")
-l1_2 = np.load("./data/CPA/label_1_2.npy")
-l2_92 = np.load("./data/CPA/label_2_92.npy")
-l3_9 = np.load("./data/CPA/label_3_9.npy")
+l3 = np.load("./data/label_3d3.npy")
+l4 = np.load("./data/label_3d4.npy")
+lf0 = np.load("./data/label_3df0.npy")
+lf1 = np.load("./data/label_3df1.npy")
 
-l = np.concatenate((l1_1, l1_2, l2_92, l3_9))
+l = np.concatenate((l3, l4, lf0, lf1))
 print(l.shape)
-np.save('./data/label.npy', l)
+np.save('./data/label_3d.npy', l)
